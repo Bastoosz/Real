@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheoBot</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>TheoBot</h1>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="card upload-area">
+                <h2>Upload da Planilha</h2>
+                <input type="file" id="spreadsheet-upload" accept=".xlsx, .xls, .csv" style="display: none;">
+                <label for="spreadsheet-upload" class="upload-label">
+                    Clique ou arraste para enviar (.xlsx, .csv)
+                </label>
+                <p id="upload-status" class="status-message"></p>
+            </div>
+        </div>
+
+        <div class="chat-main">
+            <div class="chat-window" id="chat-window">
+                <div class="message bot-message">
+                    <p>Olá! Eu sou o TheoBot. Para começar, por favor, envie sua planilha de vendas (.xlsx ou .csv) na área de upload ao lado.</p>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="user-input" placeholder="Pergunte sobre sua planilha..." disabled>
+                <button id="send-button" disabled>Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

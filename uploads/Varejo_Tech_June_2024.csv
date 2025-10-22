@@ -1,0 +1,236 @@
+Data,ID_Transacao,Produto,Região,Quantidade,Preco_Unitario,Categoria,Receita_Total
+2024-06-11,V-06-215009,Monitor 4K,Sul,7,3276.44,Eletrônicos,22935.08
+2024-06-23,V-06-998902,Monitor 4K,Sudeste,2,726.07,Eletrônicos,1452.14
+2024-06-02,V-06-945903,Laptop X1,Norte,2,3180.4,Eletrônicos,6360.8
+2024-06-28,V-06-918315,Mouse Óptico,Nordeste,6,2749.19,Periféricos,16495.14
+2024-06-08,V-06-941965,Laptop X1,Sudeste,5,505.88,Eletrônicos,2529.4
+2024-06-16,V-06-480174,Laptop X1,Norte,2,2653.36,Eletrônicos,5306.72
+2024-06-17,V-06-624026,Mouse Óptico,Centro-Oeste,7,511.93,Periféricos,3583.51
+2024-06-30,V-06-946212,Monitor 4K,Nordeste,9,606.2,Eletrônicos,5455.8
+2024-06-16,V-06-710914,HD Externo 2TB,Nordeste,3,533.06,Acessórios,1599.18
+2024-06-02,V-06-847990,Webcam HD,Norte,6,514.13,Acessórios,3084.78
+2024-06-25,V-06-299728,Teclado Mecânico,Norte,2,1220.6,Periféricos,2441.2
+2024-06-12,V-06-906719,Webcam HD,Centro-Oeste,10,1762.31,Acessórios,17623.1
+2024-06-28,V-06-459335,Laptop X1,Sul,5,149.23,Eletrônicos,746.15
+2024-06-15,V-06-856622,Fones Bluetooth,Nordeste,8,488.85,Acessórios,3910.8
+2024-06-20,V-06-641331,Mouse Óptico,Sul,3,154.86,Periféricos,464.58
+2024-06-16,V-06-633250,Laptop X1,Nordeste,3,2369.78,Eletrônicos,7109.34
+2024-06-09,V-06-609416,Laptop X1,Sudeste,4,1381.41,Eletrônicos,5525.64
+2024-06-03,V-06-403089,Teclado Mecânico,Centro-Oeste,6,1021.4,Periféricos,6128.4
+2024-06-30,V-06-986200,Mouse Óptico,Centro-Oeste,5,2736.85,Periféricos,13684.25
+2024-06-08,V-06-264659,Laptop X1,Centro-Oeste,5,1909.65,Eletrônicos,9548.25
+2024-06-15,V-06-391125,HD Externo 2TB,Sul,5,1338.71,Acessórios,6693.55
+2024-06-30,V-06-471891,HD Externo 2TB,Nordeste,2,3454.43,Acessórios,6908.86
+2024-06-03,V-06-234441,Laptop X1,Sul,6,2912.95,Eletrônicos,17477.7
+2024-06-19,V-06-701758,Laptop X1,Nordeste,6,2745.55,Eletrônicos,16473.3
+2024-06-27,V-06-379252,Teclado Mecânico,Sudeste,5,1268.3,Periféricos,6341.5
+2024-06-01,V-06-802786,Teclado Mecânico,Sul,6,2719.98,Periféricos,16319.88
+2024-06-26,V-06-293195,Monitor 4K,Sudeste,10,3147.29,Eletrônicos,31472.9
+2024-06-22,V-06-209640,Mouse Óptico,Norte,2,1693.72,Periféricos,3387.44
+2024-06-25,V-06-938572,Teclado Mecânico,Nordeste,10,334.37,Periféricos,3343.7
+2024-06-30,V-06-865688,HD Externo 2TB,Sudeste,9,47.11,Acessórios,423.99
+2024-06-05,V-06-692215,Monitor 4K,Norte,6,3402.0,Eletrônicos,20412.0
+2024-06-28,V-06-840649,HD Externo 2TB,Sul,1,634.29,Acessórios,634.29
+2024-06-15,V-06-538115,Monitor 4K,Nordeste,9,1735.9,Eletrônicos,15623.1
+2024-06-24,V-06-581229,HD Externo 2TB,Nordeste,1,1704.95,Acessórios,1704.95
+2024-06-01,V-06-269257,Laptop X1,Sudeste,8,1893.72,Eletrônicos,15149.76
+2024-06-24,V-06-117211,Monitor 4K,Sudeste,7,2929.71,Eletrônicos,20507.97
+2024-06-26,V-06-122533,HD Externo 2TB,Sudeste,9,994.93,Acessórios,8954.37
+2024-06-07,V-06-562229,Fones Bluetooth,Sudeste,7,2552.99,Acessórios,17870.93
+2024-06-26,V-06-809760,Fones Bluetooth,Sudeste,3,3443.84,Acessórios,10331.52
+2024-06-02,V-06-449698,Mouse Óptico,Centro-Oeste,2,2610.97,Periféricos,5221.94
+2024-06-27,V-06-119944,Laptop X1,Sudeste,6,879.31,Eletrônicos,5275.86
+2024-06-27,V-06-910787,Fones Bluetooth,Sudeste,3,843.62,Acessórios,2530.86
+2024-06-21,V-06-435292,Webcam HD,Sul,6,971.67,Acessórios,5830.02
+2024-06-10,V-06-302021,Laptop X1,Norte,2,99.73,Eletrônicos,199.46
+2024-06-14,V-06-687932,Laptop X1,Nordeste,5,622.01,Eletrônicos,3110.05
+2024-06-14,V-06-347045,Laptop X1,Norte,10,2271.34,Eletrônicos,22713.4
+2024-06-27,V-06-172621,Mouse Óptico,Centro-Oeste,4,3366.86,Periféricos,13467.44
+2024-06-01,V-06-171207,Teclado Mecânico,Sudeste,8,1694.03,Periféricos,13552.24
+2024-06-09,V-06-906874,Webcam HD,Sudeste,5,3112.05,Acessórios,15560.25
+2024-06-08,V-06-291960,Monitor 4K,Norte,1,203.06,Eletrônicos,203.06
+2024-06-23,V-06-639146,Webcam HD,Nordeste,10,2753.07,Acessórios,27530.7
+2024-06-29,V-06-461201,Teclado Mecânico,Nordeste,6,2292.66,Periféricos,13755.96
+2024-06-15,V-06-595668,Monitor 4K,Norte,9,2237.97,Eletrônicos,20141.73
+2024-06-22,V-06-596824,Teclado Mecânico,Sudeste,1,777.33,Periféricos,777.33
+2024-06-06,V-06-830299,HD Externo 2TB,Norte,5,1271.87,Acessórios,6359.35
+2024-06-28,V-06-247109,Teclado Mecânico,Sul,10,2691.47,Periféricos,26914.7
+2024-06-28,V-06-338939,Fones Bluetooth,Centro-Oeste,6,2688.62,Acessórios,16131.72
+2024-06-29,V-06-366091,Fones Bluetooth,Sudeste,5,1933.95,Acessórios,9669.75
+2024-06-14,V-06-316915,Fones Bluetooth,Sudeste,8,2937.17,Acessórios,23497.36
+2024-06-22,V-06-256112,Laptop X1,Norte,8,2439.76,Eletrônicos,19518.08
+2024-06-15,V-06-994294,Mouse Óptico,Sudeste,9,281.11,Periféricos,2529.99
+2024-06-25,V-06-849210,Monitor 4K,Sudeste,8,1124.68,Eletrônicos,8997.44
+2024-06-06,V-06-666898,Teclado Mecânico,Centro-Oeste,4,666.98,Periféricos,2667.92
+2024-06-10,V-06-814508,Webcam HD,Sul,9,1841.81,Acessórios,16576.29
+2024-06-14,V-06-537269,Fones Bluetooth,Nordeste,9,1591.21,Acessórios,14320.89
+2024-06-05,V-06-715870,Laptop X1,Sudeste,3,1670.91,Eletrônicos,5012.73
+2024-06-21,V-06-264551,Fones Bluetooth,Sudeste,1,460.13,Acessórios,460.13
+2024-06-13,V-06-537044,Monitor 4K,Sudeste,1,873.57,Eletrônicos,873.57
+2024-06-05,V-06-138236,Webcam HD,Sudeste,4,2837.01,Acessórios,11348.04
+2024-06-06,V-06-323820,Monitor 4K,Sudeste,1,1610.99,Eletrônicos,1610.99
+2024-06-21,V-06-571565,Mouse Óptico,Sudeste,1,2231.62,Periféricos,2231.62
+2024-06-29,V-06-753988,Webcam HD,Centro-Oeste,6,525.38,Acessórios,3152.28
+2024-06-23,V-06-573586,Monitor 4K,Sul,5,77.07,Eletrônicos,385.35
+2024-06-23,V-06-373528,Teclado Mecânico,Centro-Oeste,1,204.86,Periféricos,204.86
+2024-06-07,V-06-686816,Mouse Óptico,Sudeste,4,1202.31,Periféricos,4809.24
+2024-06-02,V-06-764536,Monitor 4K,Sudeste,7,2482.36,Eletrônicos,17376.52
+2024-06-25,V-06-383514,Mouse Óptico,Nordeste,2,2911.03,Periféricos,5822.06
+2024-06-01,V-06-262261,Monitor 4K,Centro-Oeste,8,2550.92,Eletrônicos,20407.36
+2024-06-20,V-06-711923,Monitor 4K,Norte,8,480.66,Eletrônicos,3845.28
+2024-06-11,V-06-866712,HD Externo 2TB,Nordeste,2,491.32,Acessórios,982.64
+2024-06-26,V-06-614719,Fones Bluetooth,Sul,8,1087.73,Acessórios,8701.84
+2024-06-13,V-06-502253,Webcam HD,Sudeste,7,456.13,Acessórios,3192.91
+2024-06-23,V-06-163065,Laptop X1,Sudeste,10,1790.99,Eletrônicos,17909.9
+2024-06-26,V-06-366500,Fones Bluetooth,Nordeste,8,1423.73,Acessórios,11389.84
+2024-06-26,V-06-610602,HD Externo 2TB,Nordeste,2,2055.71,Acessórios,4111.42
+2024-06-02,V-06-253457,Laptop X1,Nordeste,7,139.34,Eletrônicos,975.38
+2024-06-10,V-06-831842,Fones Bluetooth,Sul,3,2100.29,Acessórios,6300.87
+2024-06-24,V-06-329641,Teclado Mecânico,Norte,10,1389.5,Periféricos,13895.0
+2024-06-26,V-06-705067,Laptop X1,Centro-Oeste,8,1405.59,Eletrônicos,11244.72
+2024-06-15,V-06-282056,HD Externo 2TB,Sudeste,4,1211.2,Acessórios,4844.8
+2024-06-15,V-06-489445,Webcam HD,Sul,4,2130.29,Acessórios,8521.16
+2024-06-07,V-06-691721,Fones Bluetooth,Nordeste,8,453.72,Acessórios,3629.76
+2024-06-03,V-06-860879,Webcam HD,Nordeste,2,1213.25,Acessórios,2426.5
+2024-06-04,V-06-524006,Webcam HD,Centro-Oeste,4,850.94,Acessórios,3403.76
+2024-06-25,V-06-266048,Fones Bluetooth,Sul,9,778.71,Acessórios,7008.39
+2024-06-15,V-06-621139,Mouse Óptico,Nordeste,4,2242.54,Periféricos,8970.16
+2024-06-23,V-06-809754,Webcam HD,Sul,2,1785.72,Acessórios,3571.44
+2024-06-05,V-06-585258,HD Externo 2TB,Sul,7,242.95,Acessórios,1700.65
+2024-06-23,V-06-908098,Webcam HD,Centro-Oeste,3,2602.7,Acessórios,7808.1
+2024-06-02,V-06-372732,Mouse Óptico,Nordeste,10,851.34,Periféricos,8513.4
+2024-06-16,V-06-552069,Monitor 4K,Sudeste,8,629.29,Eletrônicos,5034.32
+2024-06-03,V-06-137620,Mouse Óptico,Nordeste,5,3068.25,Periféricos,15341.25
+2024-06-24,V-06-315988,Fones Bluetooth,Sul,5,1222.89,Acessórios,6114.45
+2024-06-28,V-06-172829,Laptop X1,Sul,1,689.19,Eletrônicos,689.19
+2024-06-23,V-06-313920,Fones Bluetooth,Centro-Oeste,5,3373.93,Acessórios,16869.65
+2024-06-28,V-06-274322,HD Externo 2TB,Sul,6,1849.6,Acessórios,11097.6
+2024-06-25,V-06-535867,Monitor 4K,Centro-Oeste,1,1264.05,Eletrônicos,1264.05
+2024-06-09,V-06-468963,Mouse Óptico,Sul,1,93.34,Periféricos,93.34
+2024-06-04,V-06-598438,Teclado Mecânico,Sudeste,1,2750.77,Periféricos,2750.77
+2024-06-09,V-06-250360,Laptop X1,Sudeste,5,2061.02,Eletrônicos,10305.1
+2024-06-25,V-06-542671,HD Externo 2TB,Nordeste,5,716.93,Acessórios,3584.65
+2024-06-09,V-06-458286,Laptop X1,Norte,4,1621.0,Eletrônicos,6484.0
+2024-06-08,V-06-310156,Fones Bluetooth,Sudeste,8,160.25,Acessórios,1282.0
+2024-06-29,V-06-836058,HD Externo 2TB,Sudeste,10,1642.9,Acessórios,16429.0
+2024-06-18,V-06-150132,Mouse Óptico,Centro-Oeste,5,2242.55,Periféricos,11212.75
+2024-06-12,V-06-295249,HD Externo 2TB,Nordeste,2,2862.02,Acessórios,5724.04
+2024-06-16,V-06-148104,Monitor 4K,Nordeste,3,1642.1,Eletrônicos,4926.3
+2024-06-22,V-06-355765,Fones Bluetooth,Centro-Oeste,10,279.64,Acessórios,2796.4
+2024-06-04,V-06-578535,Webcam HD,Norte,7,957.94,Acessórios,6705.58
+2024-06-01,V-06-426148,Mouse Óptico,Sul,10,2206.57,Periféricos,22065.7
+2024-06-30,V-06-635357,Fones Bluetooth,Sul,4,1865.77,Acessórios,7463.08
+2024-06-15,V-06-833917,HD Externo 2TB,Sudeste,7,1791.16,Acessórios,12538.12
+2024-06-27,V-06-888504,Monitor 4K,Nordeste,9,1122.23,Eletrônicos,10100.07
+2024-06-29,V-06-956347,HD Externo 2TB,Sul,7,2398.59,Acessórios,16790.13
+2024-06-22,V-06-511200,Teclado Mecânico,Sudeste,7,115.79,Periféricos,810.53
+2024-06-13,V-06-924403,Monitor 4K,Sul,9,1178.64,Eletrônicos,10607.76
+2024-06-16,V-06-976104,HD Externo 2TB,Sudeste,1,2889.48,Acessórios,2889.48
+2024-06-22,V-06-389920,Fones Bluetooth,Sudeste,10,3331.99,Acessórios,33319.9
+2024-06-04,V-06-933080,Teclado Mecânico,Nordeste,5,2155.43,Periféricos,10777.15
+2024-06-28,V-06-981017,Fones Bluetooth,Sul,4,276.74,Acessórios,1106.96
+2024-06-05,V-06-509987,Webcam HD,Centro-Oeste,3,27.19,Acessórios,81.57
+2024-06-22,V-06-527172,HD Externo 2TB,Sudeste,8,2418.88,Acessórios,19351.04
+2024-06-02,V-06-299203,Fones Bluetooth,Sudeste,2,1564.29,Acessórios,3128.58
+2024-06-07,V-06-868123,HD Externo 2TB,Sudeste,1,2450.53,Acessórios,2450.53
+2024-06-28,V-06-586704,Mouse Óptico,Nordeste,1,1446.07,Periféricos,1446.07
+2024-06-28,V-06-719943,Mouse Óptico,Sul,5,1933.06,Periféricos,9665.3
+2024-06-18,V-06-495031,Teclado Mecânico,Sudeste,4,262.79,Periféricos,1051.16
+2024-06-24,V-06-992644,Monitor 4K,Sul,1,643.73,Eletrônicos,643.73
+2024-06-06,V-06-819598,Laptop X1,Centro-Oeste,3,246.95,Eletrônicos,740.85
+2024-06-08,V-06-724775,Monitor 4K,Sudeste,6,3422.56,Eletrônicos,20535.36
+2024-06-08,V-06-692839,Fones Bluetooth,Sudeste,5,1389.55,Acessórios,6947.75
+2024-06-27,V-06-186200,Teclado Mecânico,Sudeste,2,2695.58,Periféricos,5391.16
+2024-06-29,V-06-415634,Laptop X1,Sudeste,8,2838.02,Eletrônicos,22704.16
+2024-06-02,V-06-678392,Teclado Mecânico,Norte,9,768.53,Periféricos,6916.77
+2024-06-06,V-06-389161,Laptop X1,Sudeste,2,2241.95,Eletrônicos,4483.9
+2024-06-20,V-06-777758,Mouse Óptico,Sudeste,2,1755.85,Periféricos,3511.7
+2024-06-29,V-06-186136,Webcam HD,Nordeste,2,883.59,Acessórios,1767.18
+2024-06-06,V-06-481556,Webcam HD,Sul,5,1965.72,Acessórios,9828.6
+2024-06-06,V-06-488878,Monitor 4K,Sudeste,9,2360.89,Eletrônicos,21248.01
+2024-06-16,V-06-653233,Laptop X1,Sudeste,4,3273.49,Eletrônicos,13093.96
+2024-06-30,V-06-705744,Monitor 4K,Centro-Oeste,2,1455.14,Eletrônicos,2910.28
+2024-06-04,V-06-181134,Webcam HD,Centro-Oeste,1,1979.79,Acessórios,1979.79
+2024-06-09,V-06-333187,Teclado Mecânico,Sul,3,1624.51,Periféricos,4873.53
+2024-06-21,V-06-690500,Laptop X1,Centro-Oeste,10,453.37,Eletrônicos,4533.7
+2024-06-13,V-06-733405,Teclado Mecânico,Sudeste,9,268.56,Periféricos,2417.04
+2024-06-23,V-06-221374,Fones Bluetooth,Sudeste,7,2126.01,Acessórios,14882.07
+2024-06-28,V-06-869887,Teclado Mecânico,Nordeste,5,1715.49,Periféricos,8577.45
+2024-06-22,V-06-717612,Webcam HD,Norte,10,166.84,Acessórios,1668.4
+2024-06-29,V-06-319594,HD Externo 2TB,Sul,10,974.84,Acessórios,9748.4
+2024-06-14,V-06-605870,Fones Bluetooth,Nordeste,1,484.31,Acessórios,484.31
+2024-06-27,V-06-460371,Monitor 4K,Sudeste,6,1897.6,Eletrônicos,11385.6
+2024-06-18,V-06-742523,Fones Bluetooth,Sudeste,4,2247.59,Acessórios,8990.36
+2024-06-23,V-06-576661,Laptop X1,Nordeste,1,439.53,Eletrônicos,439.53
+2024-06-04,V-06-632351,Webcam HD,Sudeste,10,2337.52,Acessórios,23375.2
+2024-06-01,V-06-101069,HD Externo 2TB,Nordeste,5,171.21,Acessórios,856.05
+2024-06-20,V-06-223164,Fones Bluetooth,Sudeste,6,3128.67,Acessórios,18772.02
+2024-06-22,V-06-363815,Laptop X1,Sul,10,1288.82,Eletrônicos,12888.2
+2024-06-25,V-06-663090,Monitor 4K,Nordeste,3,949.98,Eletrônicos,2849.94
+2024-06-17,V-06-953090,Laptop X1,Norte,7,2807.31,Eletrônicos,19651.17
+2024-06-02,V-06-895374,Teclado Mecânico,Sudeste,9,766.66,Periféricos,6899.94
+2024-06-22,V-06-661579,Mouse Óptico,Centro-Oeste,1,1430.01,Periféricos,1430.01
+2024-06-21,V-06-406083,Teclado Mecânico,Sudeste,1,2160.94,Periféricos,2160.94
+2024-06-30,V-06-406768,Laptop X1,Sudeste,2,207.3,Eletrônicos,414.6
+2024-06-07,V-06-165595,Fones Bluetooth,Sudeste,9,2506.07,Acessórios,22554.63
+2024-06-07,V-06-333773,Monitor 4K,Sul,8,876.79,Eletrônicos,7014.32
+2024-06-04,V-06-578941,Webcam HD,Centro-Oeste,4,27.6,Acessórios,110.4
+2024-06-12,V-06-903928,Teclado Mecânico,Centro-Oeste,1,3108.81,Periféricos,3108.81
+2024-06-01,V-06-442637,Mouse Óptico,Centro-Oeste,9,3390.95,Periféricos,30518.55
+2024-06-08,V-06-292183,Mouse Óptico,Sul,6,1412.9,Periféricos,8477.4
+2024-06-10,V-06-222837,Webcam HD,Sudeste,3,1057.75,Acessórios,3173.25
+2024-06-19,V-06-353269,Laptop X1,Sudeste,10,940.04,Eletrônicos,9400.4
+2024-06-28,V-06-291807,Fones Bluetooth,Nordeste,9,1804.38,Acessórios,16239.42
+2024-06-04,V-06-804895,Webcam HD,Sudeste,5,2772.97,Acessórios,13864.85
+2024-06-17,V-06-138757,Mouse Óptico,Centro-Oeste,2,1996.37,Periféricos,3992.74
+2024-06-22,V-06-739384,Laptop X1,Sudeste,6,579.72,Eletrônicos,3478.32
+2024-06-06,V-06-432152,Mouse Óptico,Sudeste,3,883.75,Periféricos,2651.25
+2024-06-03,V-06-805043,Laptop X1,Nordeste,3,816.83,Eletrônicos,2450.49
+2024-06-15,V-06-530098,Mouse Óptico,Sudeste,4,1471.87,Periféricos,5887.48
+2024-06-09,V-06-641699,Teclado Mecânico,Norte,10,481.4,Periféricos,4814.0
+2024-06-15,V-06-465550,Mouse Óptico,Sudeste,1,2378.53,Periféricos,2378.53
+2024-06-26,V-06-815888,HD Externo 2TB,Norte,6,2133.18,Acessórios,12799.08
+2024-06-30,V-06-933351,Webcam HD,Sudeste,3,87.4,Acessórios,262.2
+2024-06-24,V-06-316105,Laptop X1,Sudeste,5,968.67,Eletrônicos,4843.35
+2024-06-30,V-06-716556,HD Externo 2TB,Nordeste,1,1322.49,Acessórios,1322.49
+2024-06-30,V-06-541466,Webcam HD,Sudeste,3,3148.42,Acessórios,9445.26
+2024-06-25,V-06-357058,Mouse Óptico,Sudeste,1,1957.27,Periféricos,1957.27
+2024-06-24,V-06-364063,Webcam HD,Norte,9,1302.83,Acessórios,11725.47
+2024-06-06,V-06-385702,Fones Bluetooth,Nordeste,4,2107.58,Acessórios,8430.32
+2024-06-28,V-06-711940,HD Externo 2TB,Norte,2,2071.0,Acessórios,4142.0
+2024-06-02,V-06-286853,Laptop X1,Sul,1,1094.98,Eletrônicos,1094.98
+2024-06-30,V-06-151725,Laptop X1,Nordeste,4,3244.82,Eletrônicos,12979.28
+2024-06-17,V-06-284140,Teclado Mecânico,Centro-Oeste,9,102.19,Periféricos,919.71
+2024-06-15,V-06-493131,Monitor 4K,Sudeste,6,1118.78,Eletrônicos,6712.68
+2024-06-06,V-06-973758,Webcam HD,Sudeste,8,3339.93,Acessórios,26719.44
+2024-06-07,V-06-115845,Laptop X1,Nordeste,4,3064.11,Eletrônicos,12256.44
+2024-06-30,V-06-666484,Fones Bluetooth,Sudeste,1,772.21,Acessórios,772.21
+2024-06-15,V-06-212313,Mouse Óptico,Centro-Oeste,4,2819.09,Periféricos,11276.36
+2024-06-10,V-06-468577,Fones Bluetooth,Sul,4,1148.22,Acessórios,4592.88
+2024-06-22,V-06-336988,Laptop X1,Sul,2,2364.3,Eletrônicos,4728.6
+2024-06-29,V-06-302896,Laptop X1,Sudeste,7,3378.82,Eletrônicos,23651.74
+2024-06-25,V-06-593440,Fones Bluetooth,Nordeste,5,1979.23,Acessórios,9896.15
+2024-06-02,V-06-720667,Monitor 4K,Sudeste,10,1059.07,Eletrônicos,10590.7
+2024-06-03,V-06-440652,Monitor 4K,Nordeste,8,2248.49,Eletrônicos,17987.92
+2024-06-29,V-06-691258,Laptop X1,Centro-Oeste,10,40.68,Eletrônicos,406.8
+2024-06-29,V-06-259333,Laptop X1,Sudeste,5,1871.95,Eletrônicos,9359.75
+2024-06-20,V-06-537600,Mouse Óptico,Sudeste,1,410.42,Periféricos,410.42
+2024-06-06,V-06-312121,Laptop X1,Sul,5,2120.36,Eletrônicos,10601.8
+2024-06-10,V-06-886348,Monitor 4K,Nordeste,3,3083.0,Eletrônicos,9249.0
+2024-06-13,V-06-578750,Monitor 4K,Sul,9,2483.22,Eletrônicos,22348.98
+2024-06-20,V-06-371706,Laptop X1,Sudeste,10,2923.07,Eletrônicos,29230.7
+2024-06-08,V-06-601747,Teclado Mecânico,Sudeste,7,3233.49,Periféricos,22634.43
+2024-06-17,V-06-748448,Webcam HD,Sudeste,2,2711.65,Acessórios,5423.3
+2024-06-17,V-06-384498,HD Externo 2TB,Sul,3,744.15,Acessórios,2232.45
+2024-06-16,V-06-721295,Laptop X1,Centro-Oeste,3,882.8,Eletrônicos,2648.4
+2024-06-07,V-06-802348,Monitor 4K,Sudeste,9,402.66,Eletrônicos,3623.94
+2024-06-07,V-06-131653,Teclado Mecânico,Norte,7,2292.59,Periféricos,16048.13
+2024-06-27,V-06-119770,HD Externo 2TB,Norte,6,83.0,Acessórios,498.0
+2024-06-05,V-06-103099,Teclado Mecânico,Nordeste,1,509.8,Periféricos,509.8
+2024-06-04,V-06-561091,Teclado Mecânico,Sudeste,3,1744.21,Periféricos,5232.63
+2024-06-01,V-06-616813,HD Externo 2TB,Sudeste,4,1338.49,Acessórios,5353.96
+2024-06-17,V-06-198488,HD Externo 2TB,Centro-Oeste,10,1899.95,Acessórios,18999.5
+2024-06-05,V-06-997258,Laptop X1,Nordeste,9,2538.0,Eletrônicos,22842.0
+2024-06-12,V-06-119324,Mouse Óptico,Sudeste,4,2497.59,Periféricos,9990.36
+2024-06-25,V-06-771201,Teclado Mecânico,Sudeste,9,1117.74,Periféricos,10059.66
+2024-06-02,V-06-522986,Laptop X1,Sul,6,2242.49,Eletrônicos,13454.94
