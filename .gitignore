@@ -1,0 +1,80 @@
+# ===== PYTHON =====
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# ===== AMBIENTE =====
+# Nunca commite chaves de API!
+.env
+*.env
+.env.local
+.env.*.local
+
+# ===== UPLOADS =====
+# Não commite planilhas (dados sensíveis)
+backend/uploads/*.csv
+backend/uploads/*.xlsx
+backend/uploads/*.xls
+
+# Mantenha a pasta mas vazia (crie um .gitkeep)
+!backend/uploads/.gitkeep
+
+# ===== IDE / EDITOR =====
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ===== SISTEMA OPERACIONAL =====
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# ===== LOGS =====
+*.log
+logs/
+*.log.*
+
+# ===== OUTROS =====
+# Arquivos temporários
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Cache do Flask
+instance/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Distribuição / Empacotamento
+dist/
+build/
+*.egg-info/

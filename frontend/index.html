@@ -3,39 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TheoBot</title>
+    <title>TheoBot - Análise Inteligente de Dados</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>TheoBot</h1>
-    </div>
-    <div class="container">
-        <div class="sidebar">
-            <div class="card upload-area">
-                <h2>Upload da Planilha</h2>
-                <input type="file" id="spreadsheet-upload" accept=".xlsx, .xls, .csv" style="display: none;">
-                <label for="spreadsheet-upload" class="upload-label">
-                    Clique ou arraste para enviar (.xlsx, .csv)
-                </label>
-                <p id="upload-status" class="status-message"></p>
+    <!-- Header com gradiente -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
+                    <path d="M16 8L21 13L16 18L11 13L16 8Z" fill="white" opacity="0.9"/>
+                    <path d="M16 14L21 19L16 24L11 19L16 14Z" fill="white" opacity="0.6"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
+                            <stop offset="0%" stop-color="#00aaff"/>
+                            <stop offset="100%" stop-color="#0088cc"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1>TheoBot</h1>
             </div>
+            <p class="subtitle">Análise Inteligente de Dados com IA</p>
         </div>
+    </header>
 
-        <div class="chat-main">
-            <div class="chat-window" id="chat-window">
-                <div class="message bot-message">
-                    <p>Olá! Eu sou o TheoBot. Para começar, por favor, envie sua planilha de vendas (.xlsx ou .csv) na área de upload ao lado.</p>
+    <main class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="card upload-card">
+                <div class="card-header">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    <h2>Adicionar Dados</h2>
                 </div>
+                
+                <input type="file" id="spreadsheet-upload" accept=".xlsx, .xls, .csv" style="display: none;">
+                
+                <label for="spreadsheet-upload" class="upload-label">
+                    <div class="upload-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                        </svg>
+                    </div>
+                    <span class="upload-text">Clique ou arraste</span>
+                    <span class="upload-subtext">CSV, XLSX até 50MB</span>
+                </label>
+                
+                <div id="upload-status" class="status-message"></div>
+                
+                <!-- Info dos dados carregados -->
+                <div class="data-info" id="data-info" style="display: none;">
+                    <div class="info-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
+                        </svg>
+                        <h3>Dados Carregados</h3>
+                    </div>
+                    <div class="info-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="total-rows">0</span>
+                            <span class="stat-label">Linhas</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="total-files">0</span>
+                            <span class="stat-label">Arquivos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Chat Principal -->
+        <section class="chat-main">
+            <div class="chat-window" id="chat-window">
+                <!-- Mensagens aparecem aqui -->
             </div>
 
             <div class="chat-input-area">
-                <input type="text" id="user-input" placeholder="Pergunte sobre sua planilha..." disabled>
-                <button id="send-button" disabled>Enviar</button>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        placeholder="Digite sua pergunta..." 
+                        disabled
+                        autocomplete="off"
+                    >
+                    <button id="send-button" disabled aria-label="Enviar mensagem">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="input-hint" id="input-hint">
+                    Pressione <kbd>Enter</kbd> para enviar
+                </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script src="script.js"></script>
 </body>

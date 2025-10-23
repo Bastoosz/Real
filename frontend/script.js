@@ -9,6 +9,11 @@ const uploadStatus = document.getElementById('upload-status');
 const chatWindow = document.getElementById('chat-window');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
+const dataInfo = document.getElementById('data-info');
+const totalRows = document.getElementById('total-rows');
+const totalFiles = document.getElementById('total-files');
+const clearChatBtn = document.getElementById('clear-chat-btn');
+const inputHint = document.getElementById('input-hint');
 
 // --- FUNÇÕES DE UTILIDADE ---
 

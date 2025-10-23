@@ -169,11 +169,30 @@ def adicionar_nova_planilha(filepath, filename):
     Adiciona uma nova planilha aos dados existentes
     """
     try:
-        # Carrega a nova planilha
-        if filepath.endswith('.csv'):
+        # Carrega a nova planilha baseado na extensão
+        extensao = filename.lower().split('.')[-1]
+        
+        print(f"📄 Processando: {filename} (extensão: {extensao})")
+        
+        df_novo = None
+        
+        # Tenta carregar baseado na extensão
+        if extensao == 'csv':
             df_novo = pd.read_csv(filepath, encoding='utf-8')
+        elif extensao == 'xlsx':
+            try:
+                df_novo = pd.read_excel(filepath, engine='openpyxl')
+            except Exception as e:
+                print(f"⚠️ Falha ao ler como XLSX, tentando como CSV: {str(e)}")
+                # Tenta ler como CSV caso o arquivo esteja com extensão errada
+                df_novo = pd.read_csv(filepath, encoding='utf-8')
+        elif extensao == 'xls':
+            df_novo = pd.read_excel(filepath, engine='xlrd')
         else:
-            df_novo = pd.read_excel(filepath)
+            return False, f"Formato não suportado: .{extensao}. Use CSV ou XLSX."
+        
+        if df_novo is None:
+            return False, "Não foi possível processar o arquivo."
         
         df_novo = df_novo.dropna(how='all')
         

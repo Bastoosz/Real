@@ -1,0 +1,3 @@
+# Este arquivo mantém a pasta uploads/ no Git
+# As planilhas (.csv, .xlsx) não são commitadas por segurança
+# Adicione suas planilhas manualmente após clonar o repositório
