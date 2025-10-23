@@ -1,7 +1,7 @@
 // VARIÁVEIS GLOBAIS
-// URL do seu backend Flask (padrão 5000)
 const BACKEND_URL = 'http://127.0.0.1:5000'; 
-let planilhaCarregada = false; // Flag para rastrear se a planilha foi processada no backend
+let dadosCarregados = false;
+let uploadEmAndamento = false;
 
 // ELEMENTOS DO DOM
 const uploadInput = document.getElementById('spreadsheet-upload');
@@ -10,43 +10,102 @@ const chatWindow = document.getElementById('chat-window');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
 
-// --- FUNÇÕES DE UTENSILIDADE ---
+// --- FUNÇÕES DE UTILIDADE ---
 
 /**
- * Adiciona uma mensagem ao chat.
- * @param {string} text - O conteúdo da mensagem.
- * @param {string} sender - 'user' ou 'bot'.
+ * Adiciona uma mensagem ao chat
  */
 function addMessageToChat(text, sender) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', `${sender}-message`);
-    
-    // Adiciona o texto no formato de parágrafo
     messageDiv.innerHTML = `<p>${text}</p>`;
     
     chatWindow.appendChild(messageDiv);
-    // Rola para a mensagem mais recente
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-
-// --- LÓGICA DE UPLOAD (VIA API - SEM MENSAGEM NO CHAT) ---
+/**
+ * Mostra indicador de digitação
+ */
+function mostrarDigitando() {
+    const typingDiv = document.createElement('div');
+    typingDiv.classList.add('message', 'bot-message', 'typing-indicator');
+    typingDiv.id = 'typing-indicator';
+    typingDiv.innerHTML = '<p>Pensando<span class="dots">...</span></p>';
+    
+    chatWindow.appendChild(typingDiv);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
 
 /**
- * Envia o arquivo para o backend Flask e processa a resposta.
- * Remove todas as mensagens de chat para o usuário.
- * @param {Event} event - O evento de mudança do input file.
+ * Remove indicador de digitação
+ */
+function removerDigitando() {
+    const typingDiv = document.getElementById('typing-indicator');
+    if (typingDiv) {
+        typingDiv.remove();
+    }
+}
+
+// --- VERIFICAR STATUS DO SISTEMA AO CARREGAR ---
+
+/**
+ * Verifica se há dados carregados no backend
+ */
+async function verificarStatus() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/status`);
+        const result = await response.json();
+        
+        if (result.dados_carregados) {
+            dadosCarregados = true;
+            userInput.disabled = false;
+            sendButton.disabled = false;
+            
+            uploadStatus.innerHTML = `
+                ✅ Sistema pronto!<br>
+                📊 ${result.total_linhas.toLocaleString()} linhas em ${result.total_arquivos} arquivo(s)<br>
+                📁 Carregados: ${result.arquivos.slice(0, 3).join(', ')}${result.arquivos.length > 3 ? '...' : ''}
+            `;
+            
+            // Mensagem de boas-vindas
+            addMessageToChat(
+                `Olá! Estou pronto para responder suas perguntas sobre os dados de varejo tech. 
+                Atualmente temos ${result.total_linhas.toLocaleString()} registros carregados. 
+                Como posso ajudar?`, 
+                'bot'
+            );
+        } else {
+            uploadStatus.textContent = '⚠️ Nenhum dado carregado. Faça upload de uma planilha para começar.';
+            userInput.disabled = true;
+            sendButton.disabled = true;
+        }
+        
+    } catch (error) {
+        uploadStatus.textContent = '❌ Erro de conexão com o servidor.';
+        console.error('Erro ao verificar status:', error);
+        userInput.disabled = true;
+        sendButton.disabled = true;
+    }
+}
+
+// --- LÓGICA DE UPLOAD ---
+
+/**
+ * Adiciona nova planilha aos dados existentes
  */
 async function handleFileUpload(event) {
+    if (uploadEmAndamento) {
+        console.log("⚠️ Upload já em andamento...");
+        return;
+    }
+
     const file = event.target.files[0];
     if (!file) return;
 
-    // Atualiza apenas o status da área de upload
-    uploadStatus.textContent = `Enviando '${file.name}' para processamento...`;
-    planilhaCarregada = false; 
-    userInput.disabled = true;
-    sendButton.disabled = true;
-
+    uploadEmAndamento = true;
+    uploadStatus.textContent = `Adicionando '${file.name}' aos dados...`;
+    
     const formData = new FormData();
     formData.append('file', file);
 
@@ -59,90 +118,111 @@ async function handleFileUpload(event) {
         const result = await response.json();
 
         if (result.success) {
-            planilhaCarregada = true;
+            dadosCarregados = true;
             userInput.disabled = false;
             sendButton.disabled = false;
             
-            // APENAS ATUALIZA O STATUS DA ÁREA DE UPLOAD
-            uploadStatus.textContent = `✅ Sucesso: ${result.filename} carregada. Comece a fazer perguntas!`;
-
+            uploadStatus.innerHTML = `
+                ✅ ${result.message}<br>
+                📊 Total: ${result.total_linhas.toLocaleString()} linhas em ${result.total_arquivos} arquivo(s)
+            `;
+            
+            addMessageToChat(
+                `Nova planilha adicionada: ${result.filename}. ${result.message}`, 
+                'bot'
+            );
         } else {
-            uploadStatus.textContent = `❌ Erro no upload: ${result.message}`;
-            // MANTÉM MENSAGEM DE ERRO APENAS NO STATUS (não no chat)
+            uploadStatus.textContent = `❌ Erro: ${result.message}`;
         }
 
     } catch (error) {
-        uploadStatus.textContent = "❌ Erro de Conexão: O servidor backend não está ativo.";
-        console.error("Erro de conexão com o backend:", error);
+        uploadStatus.textContent = "❌ Erro de conexão com o servidor.";
+        console.error("Erro no upload:", error);
+    } finally {
+        uploadEmAndamento = false;
+        event.target.value = '';
     }
 }
 
-// --- LÓGICA DO CHAT (VIA API) ---
+// --- LÓGICA DO CHAT ---
 
 /**
- * Envia a pergunta para a rota de chat do backend com o Gemini.
- * @param {string} query - A pergunta do usuário.
+ * Envia pergunta para o bot
  */
 async function sendQueryToBot(query) {
-    if (!planilhaCarregada) {
-        addMessageToChat("Por favor, carregue uma planilha antes de fazer perguntas.", 'bot');
+    if (!dadosCarregados) {
+        addMessageToChat("Aguarde enquanto o sistema carrega os dados...", 'bot');
         return;
     }
 
-    userInput.disabled = true; // Desabilita enquanto espera a resposta
+    userInput.disabled = true;
     sendButton.disabled = true;
+    
+    mostrarDigitando();
 
     try {
         const response = await fetch(`${BACKEND_URL}/chat`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include', // Importante para manter a sessão
             body: JSON.stringify({ query: query }),
         });
 
         const result = await response.json();
+        
+        removerDigitando();
 
         if (result.success) {
             addMessageToChat(result.response, 'bot');
         } else {
-            // Se houver um erro, mas o servidor Flask respondeu
-            addMessageToChat(`⚠️ Erro do Servidor: ${result.response || result.message}`, 'bot');
+            addMessageToChat(`⚠️ Erro: ${result.response || result.message}`, 'bot');
         }
 
     } catch (error) {
-        // Erro de rede (servidor inativo)
-        addMessageToChat("❌ Erro de Comunicação: Verifique se o servidor Flask está rodando na porta 5000.", 'bot');
-        console.error("Erro na chamada de chat:", error);
+        removerDigitando();
+        addMessageToChat("❌ Erro de comunicação. Verifique se o servidor está rodando.", 'bot');
+        console.error("Erro no chat:", error);
     } finally {
-        // Reativa os controles
         userInput.disabled = false;
         sendButton.disabled = false;
-        userInput.focus(); 
+        userInput.focus();
     }
 }
 
 // --- EVENT LISTENERS ---
 
-// 1. Upload da Planilha
+// Upload de planilha
 uploadInput.addEventListener('change', handleFileUpload);
 
-// 2. Envio da Mensagem
+// Envio de mensagem
 const handleMessageSend = () => {
     const query = userInput.value.trim();
     if (query === "") return;
 
     addMessageToChat(query, 'user');
-    userInput.value = ""; // Limpa a caixa de entrada
-
-    // Chama a função real de envio para o backend
+    userInput.value = "";
+    
     sendQueryToBot(query);
 };
 
 sendButton.addEventListener('click', handleMessageSend);
 
 userInput.addEventListener('keydown', (event) => {
-    // Permite o envio com Enter, desde que o botão não esteja desabilitado
     if (event.key === 'Enter' && !sendButton.disabled) {
-        event.preventDefault(); // Evita quebra de linha no input
+        event.preventDefault();
         handleMessageSend();
     }
+});
+
+// --- INICIALIZAÇÃO ---
+
+// Verifica status ao carregar a página
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('✅ Script carregado');
+    console.log('🔗 Backend:', BACKEND_URL);
+    
+    // Verifica se há dados carregados
+    verificarStatus();
 });
