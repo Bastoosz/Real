@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, send_from_directory
 from flask_cors import CORS
 import pandas as pd
 import google.generativeai as genai
@@ -13,7 +13,15 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)  # Necessário para sessões
-CORS(app, supports_credentials=True)  # Permite cookies de sessão
+
+# CORS configurado para aceitar qualquer origem (ajuste em produção se necessário)
+CORS(app, supports_credentials=True, resources={
+    r"/*": {
+        "origins": "*",
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
 # Configurações
 UPLOAD_FOLDER = 'uploads'
@@ -442,6 +450,25 @@ def limpar_historico():
     })
 
 
+@app.route('/')
+def home():
+    """
+    Página inicial - confirma que o backend está online
+    """
+    return jsonify({
+        'status': 'online',
+        'message': '🤖 TheoBot API está rodando!',
+        'version': '1.0',
+        'endpoints': {
+            '/status': 'GET - Verifica status do sistema',
+            '/upload': 'POST - Faz upload de planilhas',
+            '/chat': 'POST - Envia mensagens para o bot',
+            '/historico': 'GET - Obtém histórico de conversas',
+            '/limpar_historico': 'POST - Limpa o histórico'
+        }
+    })
+
+
 @app.route('/status', methods=['GET'])
 def status():
     """
@@ -470,8 +497,9 @@ if __name__ == '__main__':
     print(f"🤖 Modelo ativo: {MODEL_NAME}")
     print(f"📁 Total de linhas: {dados_globais['total_linhas']}")
     print(f"📋 Arquivos carregados: {len(dados_globais['arquivos_carregados'])}")
-    print(f"🔧 Porta: 5000")
+    print(f"🔧 Porta: {os.getenv('PORT', 5000)}")
     print("=" * 60 + "\n")
-    app.run(debug=True, host='0.0.0.0', port=5000, use_reloader=False)
     
-# Fim.
+    # Detecta se está em produção (Render) ou desenvolvimento
+    port = int(os.getenv('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port, use_reloader=False)

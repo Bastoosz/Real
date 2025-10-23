@@ -1,5 +1,10 @@
 // VARIÁVEIS GLOBAIS
-const BACKEND_URL = 'http://127.0.0.1:5000'; 
+// Detecta se está em produção (sem localhost) ou desenvolvimento
+const isProduction = !window.location.hostname.includes('localhost') && 
+                     !window.location.hostname.includes('127.0.0.1');
+
+const BACKEND_URL = isProduction ? '' : 'http://127.0.0.1:5000';
+
 let dadosCarregados = false;
 let uploadEmAndamento = false;
 
@@ -59,7 +64,7 @@ function removerDigitando() {
  */
 async function verificarStatus() {
     try {
-        const response = await fetch(`${BACKEND_URL}/status`);
+        const response = await fetch(`${BACKEND_URL}/api/status`);
         const result = await response.json();
         
         if (result.dados_carregados) {
@@ -67,27 +72,27 @@ async function verificarStatus() {
             userInput.disabled = false;
             sendButton.disabled = false;
             
-            uploadStatus.innerHTML = `
-                ✅ Sistema pronto!<br>
-                📊 ${result.total_linhas.toLocaleString()} linhas em ${result.total_arquivos} arquivo(s)<br>
-                📁 Carregados: ${result.arquivos.slice(0, 3).join(', ')}${result.arquivos.length > 3 ? '...' : ''}
-            `;
+            // Atualiza informações dos dados
+            totalRows.textContent = result.total_linhas.toLocaleString('pt-BR');
+            totalFiles.textContent = result.total_arquivos;
+            dataInfo.style.display = 'block';
             
-            // Mensagem de boas-vindas
+            uploadStatus.innerHTML = `✅ Sistema pronto! ${result.total_linhas.toLocaleString('pt-BR')} linhas carregadas.`;
+            
+            // Limpa chat e adiciona mensagem de boas-vindas
+            chatWindow.innerHTML = '';
             addMessageToChat(
-                `Olá! Estou pronto para responder suas perguntas sobre os dados de varejo tech. 
-                Atualmente temos ${result.total_linhas.toLocaleString()} registros carregados. 
-                Como posso ajudar?`, 
+                `👋 Olá! Estou pronto para responder suas perguntas sobre os dados de varejo tech.\n\n📊 Atualmente temos **${result.total_linhas.toLocaleString('pt-BR')} registros** em **${result.total_arquivos} arquivo(s)**.\n\nComo posso ajudar?`, 
                 'bot'
             );
         } else {
-            uploadStatus.textContent = '⚠️ Nenhum dado carregado. Faça upload de uma planilha para começar.';
+            uploadStatus.innerHTML = '⚠️ Nenhum dado carregado. Faça upload de uma planilha para começar.';
             userInput.disabled = true;
             sendButton.disabled = true;
         }
         
     } catch (error) {
-        uploadStatus.textContent = '❌ Erro de conexão com o servidor.';
+        uploadStatus.innerHTML = '❌ Erro de conexão. Verifique se o servidor está rodando.';
         console.error('Erro ao verificar status:', error);
         userInput.disabled = true;
         sendButton.disabled = true;
@@ -109,13 +114,13 @@ async function handleFileUpload(event) {
     if (!file) return;
 
     uploadEmAndamento = true;
-    uploadStatus.textContent = `Adicionando '${file.name}' aos dados...`;
+    uploadStatus.innerHTML = `⏳ Processando '${file.name}'...`;
     
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-        const response = await fetch(`${BACKEND_URL}/upload`, {
+        const response = await fetch(`${BACKEND_URL}/api/upload`, {
             method: 'POST',
             body: formData,
         });
@@ -127,21 +132,23 @@ async function handleFileUpload(event) {
             userInput.disabled = false;
             sendButton.disabled = false;
             
-            uploadStatus.innerHTML = `
-                ✅ ${result.message}<br>
-                📊 Total: ${result.total_linhas.toLocaleString()} linhas em ${result.total_arquivos} arquivo(s)
-            `;
+            // Atualiza stats
+            totalRows.textContent = result.total_linhas.toLocaleString('pt-BR');
+            totalFiles.textContent = result.total_arquivos;
+            dataInfo.style.display = 'block';
+            
+            uploadStatus.innerHTML = `✅ ${result.message}`;
             
             addMessageToChat(
-                `Nova planilha adicionada: ${result.filename}. ${result.message}`, 
+                `📁 Nova planilha adicionada: **${result.filename}**\n\n${result.message}`, 
                 'bot'
             );
         } else {
-            uploadStatus.textContent = `❌ Erro: ${result.message}`;
+            uploadStatus.innerHTML = `❌ Erro: ${result.message}`;
         }
 
     } catch (error) {
-        uploadStatus.textContent = "❌ Erro de conexão com o servidor.";
+        uploadStatus.innerHTML = "❌ Erro de conexão com o servidor.";
         console.error("Erro no upload:", error);
     } finally {
         uploadEmAndamento = false;
@@ -166,12 +173,12 @@ async function sendQueryToBot(query) {
     mostrarDigitando();
 
     try {
-        const response = await fetch(`${BACKEND_URL}/chat`, {
+        const response = await fetch(`${BACKEND_URL}/api/chat`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json'
             },
-            credentials: 'include', // Importante para manter a sessão
+            credentials: 'include',
             body: JSON.stringify({ query: query }),
         });
 
@@ -201,6 +208,23 @@ async function sendQueryToBot(query) {
 // Upload de planilha
 uploadInput.addEventListener('change', handleFileUpload);
 
+// Botão limpar chat
+clearChatBtn.addEventListener('click', async () => {
+    if (confirm('Deseja limpar todo o histórico de conversas?')) {
+        try {
+            await fetch(`${BACKEND_URL}/api/limpar_historico`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            
+            chatWindow.innerHTML = '';
+            addMessageToChat('🗑️ Histórico limpo! Como posso ajudar?', 'bot');
+        } catch (error) {
+            console.error('Erro ao limpar histórico:', error);
+        }
+    }
+});
+
 // Envio de mensagem
 const handleMessageSend = () => {
     const query = userInput.value.trim();
@@ -221,12 +245,21 @@ userInput.addEventListener('keydown', (event) => {
     }
 });
 
+// Esconde hint ao começar a digitar
+userInput.addEventListener('input', () => {
+    if (userInput.value.length > 0) {
+        inputHint.style.opacity = '0';
+    } else {
+        inputHint.style.opacity = '1';
+    }
+});
+
 // --- INICIALIZAÇÃO ---
 
 // Verifica status ao carregar a página
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ Script carregado');
-    console.log('🔗 Backend:', BACKEND_URL);
+    console.log('✅ TheoBot carregado');
+    console.log('🔗 Backend:', BACKEND_URL || 'Mesma origem (produção)');
     
     // Verifica se há dados carregados
     verificarStatus();
