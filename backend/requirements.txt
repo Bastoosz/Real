@@ -5,3 +5,4 @@ openpyxl
 google-generativeai
 python-dotenv
 xlrd
+gunicorn
