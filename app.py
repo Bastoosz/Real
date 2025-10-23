@@ -11,17 +11,18 @@ import secrets
 # Carrega variáveis de ambiente do .env
 load_dotenv()
 
-app = Flask(__name__)
+# --- ALTERAÇÃO 1: Configurar Pasta Estática ---
+# Informamos ao Flask que nossos arquivos de frontend (index.html, script.js)
+# estão na pasta 'public'.
+# 'static_url_path' diz ao Flask para servi-los a partir da raiz ('/').
+# Ex: Uma requisição para '/script.js' servirá o arquivo 'public/script.js'
+app = Flask(__name__, static_folder='public', static_url_path='')
 app.secret_key = secrets.token_hex(16)  # Necessário para sessões
 
-# CORS configurado para aceitar qualquer origem (ajuste em produção se necessário)
-CORS(app, supports_credentials=True, resources={
-    r"/*": {
-        "origins": "*",
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
-    }
-})
+# --- ALTERAÇÃO 2: Ajustar CORS ---
+# Vamos aplicar o CORS apenas às rotas da API, que agora estão em '/api/*'
+# Isso evita conflitos com as rotas que servem os arquivos.
+CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
 # Configurações
 UPLOAD_FOLDER = 'uploads'
@@ -304,7 +305,11 @@ def salvar_no_historico(session_id, pergunta, resposta):
         historicos[session_id] = historicos[session_id][-50:]
 
 
-@app.route('/upload', methods=['POST'])
+# --- ALTERAÇÃO 3: Adicionar prefixo /api ---
+# Todas as suas rotas de API agora têm o prefixo /api/
+# para corresponder ao que o script.js está chamando.
+
+@app.route('/api/upload', methods=['POST'])
 def upload_file():
     """
     Adiciona uma nova planilha aos dados existentes
@@ -359,7 +364,7 @@ def upload_file():
         }), 500
 
 
-@app.route('/chat', methods=['POST'])
+@app.route('/api/chat', methods=['POST'])
 def chat():
     """
     Recebe uma pergunta e retorna resposta do Gemini com contexto e histórico
@@ -413,7 +418,7 @@ def chat():
         }), 500
 
 
-@app.route('/historico', methods=['GET'])
+@app.route('/api/historico', methods=['GET'])
 def obter_historico():
     """
     Retorna o histórico de conversas da sessão atual
@@ -434,7 +439,7 @@ def obter_historico():
     })
 
 
-@app.route('/limpar_historico', methods=['POST'])
+@app.route('/api/limpar_historico', methods=['POST'])
 def limpar_historico():
     """
     Limpa o histórico da sessão atual
@@ -450,26 +455,28 @@ def limpar_historico():
     })
 
 
-@app.route('/')
-def home():
+# --- ALTERAÇÃO 4: Mover rota raiz original ---
+# A sua rota '/' antiga (que mostrava o JSON) foi movida para '/api'
+@app.route('/api')
+def api_home():
     """
-    Página inicial - confirma que o backend está online
+    Página inicial da API - confirma que o backend está online
     """
     return jsonify({
         'status': 'online',
         'message': '🤖 TheoBot API está rodando!',
         'version': '1.0',
         'endpoints': {
-            '/status': 'GET - Verifica status do sistema',
-            '/upload': 'POST - Faz upload de planilhas',
-            '/chat': 'POST - Envia mensagens para o bot',
-            '/historico': 'GET - Obtém histórico de conversas',
-            '/limpar_historico': 'POST - Limpa o histórico'
+            '/api/status': 'GET - Verifica status do sistema',
+            '/api/upload': 'POST - Faz upload de planilhas',
+            '/api/chat': 'POST - Envia mensagens para o bot',
+            '/api/historico': 'GET - Obtém histórico de conversas',
+            '/api/limpar_historico': 'POST - Limpa o histórico'
         }
     })
 
 
-@app.route('/status', methods=['GET'])
+@app.route('/api/status', methods=['GET'])
 def status():
     """
     Retorna informações sobre o sistema
@@ -486,12 +493,39 @@ def status():
     })
 
 
+# --- ALTERAÇÃO 5: Servir o Aplicativo Frontend ---
+# Estas rotas garantem que o seu site (index.html) seja servido.
+
+@app.route('/')
+def serve_app():
+    """
+    Serve a página principal (index.html) da pasta 'public'
+    """
+    return send_from_directory(app.static_folder, 'index.html')
+
+
+@app.errorhandler(404)
+def not_found(e):
+    """
+    Se uma rota não for encontrada (404), verifica:
+    1. Se for um 404 da API, retorna JSON de erro.
+    2. Se for um 404 do site (ex: usuário recarregou a página),
+       serve o index.html para o frontend carregar.
+    """
+    # Se o caminho não for da API, serve o index.html
+    if not request.path.startswith('/api/'):
+        return send_from_directory(app.static_folder, 'index.html')
+    
+    # É uma rota da API que não existe
+    return jsonify({'success': False, 'message': 'Endpoint da API não encontrado'}), 404
+
+
 if __name__ == '__main__':
     # Carrega as planilhas base automaticamente
     carregar_planilhas_base()
     
     print("=" * 60)
-    print("🚀 SERVIDOR FLASK INICIADO")
+    print("🚀 SERVIDOR FLASK INICIADO (MODO HÍBRIDO: API + FRONTEND)")
     print("=" * 60)
     print("📊 Backend de Chat com Planilhas + Gemini AI")
     print(f"🤖 Modelo ativo: {MODEL_NAME}")
