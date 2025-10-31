@@ -1,3 +1,4 @@
+# ...existing code...
 import os
 from flask import Flask, request, jsonify, session, send_from_directory
 from flask_cors import CORS
@@ -7,6 +8,8 @@ from dotenv import load_dotenv
 from pathlib import Path
 from datetime import datetime
 import secrets
+from werkzeug.utils import secure_filename
+# ...existing code...
 
 # Carrega variáveis de ambiente do .env
 load_dotenv()
@@ -46,7 +49,7 @@ try:
     
     modelos_disponiveis = []
     for m in genai.list_models():
-        if 'generateContent' in m.supported_generation_methods:
+        if 'generateContent' in getattr(m, "supported_generation_methods", []):
             nome_modelo = m.name.replace('models/', '')
             modelos_disponiveis.append(nome_modelo)
             print(f"   ✓ {nome_modelo}")
@@ -76,7 +79,7 @@ try:
     # Teste rápido de geração
     print("\n🧪 Testando geração de conteúdo...")
     test_response = model.generate_content("Diga apenas 'OK'")
-    print(f"✅ Resposta do modelo: {test_response.text.strip()}")
+    print(f"✅ Resposta do modelo: {getattr(test_response, 'text', str(test_response)).strip()}")
     print("=" * 60 + "\n")
 
 except Exception as e:
@@ -270,22 +273,24 @@ AMOSTRA DOS DADOS (primeiras 10 linhas):
         if historico:
             contexto += "\n\nHISTÓRICO DA CONVERSA:\n"
             for i, msg in enumerate(historico[-5:], 1):  # Últimas 5 mensagens
-                contexto += f"{i}. USER: {msg['pergunta']}\n"
-                contexto += f"   BOT: {msg['resposta'][:200]}...\n"  # Resumo
+                contexto += f"{i}. USER: {msg.get('pergunta', '')}\n"
+                resposta_preview = (msg.get('resposta') or '')[:200]
+                contexto += f"   BOT: {resposta_preview}{'...' if len(msg.get('resposta', '') or '') > 200 else ''}\n"
 
     contexto += """
 
 INSTRUÇÕES:
-- Responda perguntas sobre os dados de forma clara e objetiva
-- Use o histórico da conversa para manter contexto
-- Quando necessário, realize cálculos, filtragens ou agregações
-- Formate números grandes com separadores (ex: 1.234.567)
-- Se a pergunta não puder ser respondida com os dados, informe educadamente
-- Seja preciso e base suas respostas EXCLUSIVAMENTE nos dados fornecidos
+- Seja breve, claro e direto em suas respostas.
+- Não use formatação markdown, como asteriscos (**), nas respostas.
+- Responda perguntas sobre os dados de forma objetiva.
+- Use o histórico da conversa para manter contexto.
+- Quando necessário, realize cálculos, filtragens ou agregações.
+- Formate números grandes com separadores (ex: 1.234.567).
+- Se a pergunta não puder ser respondida com os dados, informe educadamente.
+- Seja preciso e base suas respostas EXCLUSIVAMENTE nos dados fornecidos.
 """
     
     return contexto
-
 
 def salvar_no_historico(session_id, pergunta, resposta):
     """
@@ -335,8 +340,13 @@ def upload_file():
                 'message': f'Formato não suportado. Use: {", ".join(ALLOWED_EXTENSIONS)}'
             }), 400
         
-        # Salva o arquivo
-        filename = file.filename
+        # Usa secure_filename para evitar path traversal
+        filename = secure_filename(file.filename)
+        # Se já existir, adiciona timestamp para evitar sobrescrever
+        if os.path.exists(os.path.join(UPLOAD_FOLDER, filename)):
+            name, ext = os.path.splitext(filename)
+            filename = f"{name}_{datetime.now().strftime('%Y%m%d%H%M%S')}{ext}"
+        
         filepath = os.path.join(UPLOAD_FOLDER, filename)
         file.save(filepath)
         
@@ -370,8 +380,8 @@ def chat():
     Recebe uma pergunta e retorna resposta do Gemini com contexto e histórico
     """
     try:
-        data = request.get_json()
-        query = data.get('query', '').strip()
+        data = request.get_json(force=True, silent=True) or {}
+        query = (data.get('query') or '').strip()
         
         if not query:
             return jsonify({
@@ -395,10 +405,18 @@ def chat():
         contexto = criar_contexto_ia(incluir_historico=True, session_id=session_id)
         prompt = f"{contexto}\n\nPERGUNTA DO USUÁRIO:\n{query}\n\nRESPOSTA:"
         
-        # Chama o Gemini
+        # Chama o Gemini com tratamento de erros
         print(f"🤖 [{session_id[:8]}] Processando: {query}")
-        response = model.generate_content(prompt)
-        resposta_bot = response.text
+        try:
+            response = model.generate_content(prompt)
+            resposta_bot = getattr(response, 'text', None) or str(response)
+        except Exception as gen_e:
+            print(f"❌ Erro na geração do modelo: {gen_e}")
+            return jsonify({
+                'success': False,
+                'response': f'Erro ao gerar resposta do modelo: {str(gen_e)}'
+            }), 500
+
         print(f"✅ Resposta gerada")
         
         # Salva no histórico
@@ -537,3 +555,4 @@ if __name__ == '__main__':
     # Detecta se está em produção (Render) ou desenvolvimento
     port = int(os.getenv('PORT', 5000))
     app.run(debug=False, host='0.0.0.0', port=port, use_reloader=False)
+# ...existing code...
