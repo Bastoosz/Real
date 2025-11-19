@@ -10,13 +10,11 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 
-# Carrega .env (local)
 load_dotenv()
 
 # --- CONFIGURAÇÕES ---
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
-# Vercel exige uso de /tmp
 UPLOAD_FOLDER = '/tmp' if os.environ.get('VERCEL') else os.path.join(BASE_DIR, 'uploads')
 Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 
@@ -25,16 +23,57 @@ app.secret_key = secrets.token_hex(16)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'csv'}
 
-# --- VARIÁVEIS GLOBAIS ---
+# --- DADOS GLOBAIS ---
 dados_globais = {'df': None, 'linhas': 0, 'cols': []}
 historicos = {}
 
-# --- FUNÇÕES AUXILIARES ---
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+# --- FUNÇÃO MÁGICA: ENCONTRAR MODELO ---
+def configurar_e_obter_modelo():
+    api_key = os.getenv('GEMINI_API_KEY')
+    if not api_key:
+        raise ValueError("API Key não encontrada")
+    
+    genai.configure(api_key=api_key)
+    
+    # Lista modelos disponíveis para sua chave
+    modelos_disponiveis = []
+    try:
+        for m in genai.list_models():
+            if 'generateContent' in m.supported_generation_methods:
+                modelos_disponiveis.append(m.name)
+    except Exception as e:
+        # Fallback se a listagem falhar
+        return genai.GenerativeModel('gemini-pro')
+
+    # Lógica de preferência: Flash > 1.5 > Pro
+    modelo_escolhido = None
+    
+    # Tenta achar variações do Flash
+    for m in modelos_disponiveis:
+        if 'flash' in m.lower():
+            modelo_escolhido = m
+            break
+    
+    # Se não achar flash, tenta 1.5 pro
+    if not modelo_escolhido:
+        for m in modelos_disponiveis:
+            if '1.5' in m and 'pro' in m:
+                modelo_escolhido = m
+                break
+                
+    # Se não achar nada específico, pega o primeiro disponível
+    if not modelo_escolhido and modelos_disponiveis:
+        modelo_escolhido = modelos_disponiveis[0]
+    
+    # Se a lista estiver vazia (raro), tenta o padrão antigo
+    if not modelo_escolhido:
+        modelo_escolhido = 'gemini-pro'
+        
+    print(f"🤖 Modelo selecionado automaticamente: {modelo_escolhido}")
+    return genai.GenerativeModel(modelo_escolhido)
+
 
 # --- ROTAS ---
-
 @app.route('/api/upload', methods=['POST'])
 def upload():
     try:
@@ -61,43 +100,43 @@ def upload():
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    # AQUI ESTÁ O SEGREDO DO DEBUG
     try:
-        # 1. Tenta configurar o Gemini NA HORA DA MENSAGEM para pegar o erro
-        api_key = os.getenv('GEMINI_API_KEY')
-        if not api_key:
-            return jsonify({'success': False, 'response': 'ERRO: Variável GEMINI_API_KEY não encontrada na Vercel.'}), 500
-            
-        genai.configure(api_key=api_key)
         
-        # 2. Tenta instanciar o modelo
         try:
-            model = genai.GenerativeModel('gemini-1.5-flash')
-        except Exception as model_error:
-            return jsonify({'success': False, 'response': f'ERRO AO CRIAR MODELO: {str(model_error)}'}), 500
+            model = configurar_e_obter_modelo()
+        except Exception as e:
+            return jsonify({'success': False, 'response': f"Erro na Configuração da IA: {str(e)}"}), 500
 
-        # 3. Verifica dados
+        
         if dados_globais['df'] is None:
-            return jsonify({'success': False, 'response': '⚠️ Memória limpa. Faça upload novamente.'}), 400
+            return jsonify({'success': False, 'response': '⚠️ Planilha não encontrada na memória. Faça upload novamente.'}), 400
 
         data = request.get_json() or {}
         query = data.get('query')
         if not query: return jsonify({'success': False, 'response': 'Pergunta vazia'}), 400
 
-        # 4. Gera resposta
+        # 3. Gera resposta
         df = dados_globais['df']
-        prompt = f"Analise este dataframe com {len(df)} linhas. Colunas: {list(df.columns)}. Pergunta: {query}"
+        amostra = df.head(5).to_string()
+        prompt = f"""
+        Atue como analista de dados.
+        Contexto: Tabela com {len(df)} linhas. Colunas: {list(df.columns)}.
+        Amostra dos dados:
+        {amostra}
+        
+        Pergunta do usuário: {query}
+        Responda de forma concisa baseada nos dados acima.
+        """
         
         response = model.generate_content(prompt)
         return jsonify({'success': True, 'response': response.text})
 
     except Exception as e:
-        # PEGA O ERRO REAL E MOSTRA NO CHAT
         erro_detalhado = traceback.format_exc()
-        print(erro_detalhado) # loga no console da Vercel
-        return jsonify({'success': False, 'response': f"ERRO CRÍTICO PYTHON:\n{str(e)}\n\n{erro_detalhado[-200:]}"}), 500
-
-# --- ROTAS FRONTEND ---
+        print(erro_detalhado)
+        # Retorna o erro detalhado no chat para sabermos o que aconteceu
+        return jsonify({'success': False, 'response': f"ERRO TÉCNICO:\n{str(e)}"}), 500
+    
 @app.route('/')
 def index():
     return send_from_directory(STATIC_DIR, 'index.html')
@@ -109,5 +148,3 @@ def not_found(e):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
-
-#asda
