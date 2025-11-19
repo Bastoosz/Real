@@ -141,7 +141,7 @@ def gerar_prompt_analista(query, df, historico_chat):
 
     DIRETRIZES:
     1. Seja direto, profissional e educado. Evite linguagem imprópria.
-    2. Use Chain of Thought
+    2. Evite usar asteristicos e traços nas respostas e seja muito direto e objetivo.
     3. Responda APENAS com base nos dados acima.
     """
     return prompt
