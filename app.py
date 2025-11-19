@@ -1,7 +1,6 @@
 import os
 import secrets
 import traceback
-from datetime import datetime
 from pathlib import Path
 
 from flask import Flask, request, jsonify, session, send_from_directory
@@ -15,12 +14,11 @@ from werkzeug.utils import secure_filename
 load_dotenv()
 
 # ==========================================
-# 1. CONFIGURAÇÕES GERAIS
+# 1. CONFIGURAÇÕES
 # ==========================================
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
-# Vercel exige escrita em /tmp
 if os.environ.get('VERCEL'):
     UPLOAD_FOLDER = '/tmp'
 else:
@@ -28,9 +26,6 @@ else:
 
 Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 
-# ==========================================
-# 2. FLASK SETUP
-# ==========================================
 app = Flask(__name__, static_folder=STATIC_DIR, static_url_path='')
 app.secret_key = secrets.token_hex(16)
 CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
@@ -38,7 +33,7 @@ CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'csv'}
 
 # ==========================================
-# 3. MEMÓRIA DO SERVIDOR
+# 2. MEMÓRIA GLOBAIS
 # ==========================================
 dados_globais = {
     'df': None,
@@ -47,43 +42,78 @@ dados_globais = {
 historicos = {}
 
 # ==========================================
-# 4. INTELIGÊNCIA ARTIFICIAL (CORRIGIDO)
+# 3. SELEÇÃO INTELIGENTE DE MODELO
 # ==========================================
-
-def obter_modelo_gemini():
+def obter_modelo_seguro():
     """
-    Configura e retorna o modelo Gemini 1.5 Flash.
-    Este modelo tem a melhor cota gratuita e velocidade.
+    Lista os modelos disponíveis para a chave e escolhe um SEGURO.
+    Filtra modelos experimentais ('exp') para evitar erro de cota (429).
+    Prioriza modelos 'flash' pela velocidade.
     """
     api_key = os.getenv('GEMINI_API_KEY')
     if not api_key:
-        raise ValueError("A GEMINI_API_KEY não foi configurada nas variáveis de ambiente.")
+        raise ValueError("GEMINI_API_KEY não configurada.")
     
     genai.configure(api_key=api_key)
     
-    # FORÇAMOS O MODELO CORRETO AQUI PARA EVITAR ERRO DE COTA (429)
-    # O 'gemini-1.5-flash' é o mais estável para contas gratuitas.
-    return genai.GenerativeModel('gemini-1.5-flash')
+    candidatos = []
+    try:
+        # Pede ao Google o que está disponível PARA ESTA CONTA
+        for m in genai.list_models():
+            if 'generateContent' in m.supported_generation_methods:
+                nome = m.name.lower()
+                # REGRA DE OURO: Fugir de modelos experimentais (Causa do erro 429)
+                if 'exp' not in nome and 'experimental' not in nome:
+                    candidatos.append(m.name)
+    except Exception as e:
+        # Se a listagem falhar, tenta o clássico 'gemini-pro' que quase nunca falha
+        print(f"Erro ao listar modelos: {e}")
+        return genai.GenerativeModel('gemini-pro')
+
+    if not candidatos:
+        # Se não sobrou nada (raro), tenta o padrãozão
+        return genai.GenerativeModel('gemini-pro')
+
+    # Lógica de escolha entre os candidatos seguros
+    modelo_escolhido = None
+    
+    # 1. Tenta achar algum Flash (rápido e barato)
+    for nome in candidatos:
+        if 'flash' in nome:
+            modelo_escolhido = nome
+            break
+    
+    # 2. Se não tiver Flash, tenta o Pro 1.5
+    if not modelo_escolhido:
+        for nome in candidatos:
+            if '1.5' in nome and 'pro' in nome:
+                modelo_escolhido = nome
+                break
+                
+    # 3. Se não tiver, pega o primeiro da lista limpa
+    if not modelo_escolhido:
+        modelo_escolhido = candidatos[0]
+
+    print(f"🤖 Modelo Escolhido Automaticamente: {modelo_escolhido}")
+    return genai.GenerativeModel(modelo_escolhido)
+
 
 def gerar_prompt_analista(query, df, historico_chat):
-    """
-    Cria o prompt rico para o analista de dados
-    """
-    # Cria amostra dos dados
+    # Amostra de dados
     try:
-        # Tenta usar Markdown (requer tabulate no requirements.txt)
+        # Tenta usar Markdown (requer tabulate)
         amostra = df.head(8).to_markdown(index=False)
     except:
-        # Fallback se der erro no tabulate
+        # Fallback simples
         amostra = df.head(8).to_string(index=False)
 
     colunas = list(df.columns)
     
-    # Contexto estatístico
+    # Estatísticas
     try:
         stats = df.describe().to_markdown()
     except:
-        stats = "Sem estatísticas numéricas."
+        stats = "Estatísticas não disponíveis."
 
     # Histórico
     chat_context = ""
@@ -93,12 +123,13 @@ def gerar_prompt_analista(query, df, historico_chat):
         )
 
     prompt = f"""
-    Você é o TheoBot, um Analista de Dados Sênior.
+    Atue como o TheoBot, um Analista de Dados Sênior.
     
-    TABELA DE DADOS:
-    - Linhas: {len(df)} | Colunas: {', '.join(colunas)}
+    DADOS DISPONÍVEIS:
+    - Dimensões: {len(df)} linhas x {len(colunas)} colunas
+    - Colunas: {', '.join(colunas)}
     
-    ESTATÍSTICAS GERAIS:
+    ESTATÍSTICAS (Resumo Numérico):
     {stats}
 
     AMOSTRA (Primeiras 8 linhas):
@@ -108,17 +139,15 @@ def gerar_prompt_analista(query, df, historico_chat):
 
     PERGUNTA DO USUÁRIO: "{query}"
 
-    REGRAS:
-    1. Responda de forma profissional e direta.
-    2. Use formatação Markdown (Negrito para números, Tabelas para listas).
-    3. Baseie-se APENAS nos dados acima.
-    4. Se houver datas, considere o formato brasileiro (dd/mm/aaaa).
-    5. Não invente dados.
+    DIRETRIZES:
+    1. Seja direto, profissional e educado. Evite linguagem imprópria.
+    2. Use formatação Markdown (Tabelas, Negrito) para organizar a resposta.
+    3. Responda APENAS com base nos dados acima.
     """
     return prompt
 
 # ==========================================
-# 5. ROTAS
+# 4. ROTAS
 # ==========================================
 
 def allowed_file(filename):
@@ -127,9 +156,9 @@ def allowed_file(filename):
 @app.route('/api/upload', methods=['POST'])
 def upload():
     try:
-        if 'file' not in request.files: return jsonify({'success': False, 'message': 'Nenhum arquivo enviado.'}), 400
+        if 'file' not in request.files: return jsonify({'success': False, 'message': 'Sem arquivo'}), 400
         file = request.files['file']
-        if not file.filename: return jsonify({'success': False, 'message': 'Nome vazio.'}), 400
+        if not file.filename: return jsonify({'success': False, 'message': 'Nome vazio'}), 400
         
         filename = secure_filename(file.filename)
         filepath = os.path.join(UPLOAD_FOLDER, filename)
@@ -143,68 +172,56 @@ def upload():
         dados_globais['df'] = df.dropna(how='all')
         dados_globais['nome_arquivo'] = filename
         
-        return jsonify({
-            'success': True, 
-            'message': 'Upload realizado com sucesso!', 
-            'total_linhas': len(dados_globais['df'])
-        })
+        return jsonify({'success': True, 'message': 'Upload OK!', 'total_linhas': len(dados_globais['df'])})
     except Exception as e:
-        return jsonify({'success': False, 'message': f"Erro no processamento: {str(e)}"}), 500
+        return jsonify({'success': False, 'message': f"Erro: {str(e)}"}), 500
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
     try:
-        # Verifica Memória
+        # Checa memória
         if dados_globais['df'] is None:
-            return jsonify({
-                'success': False, 
-                'response': '⚠️ **Atenção:** O servidor reiniciou (comportamento padrão da Vercel). Por favor, faça o upload da planilha novamente.'
-            }), 400
+            return jsonify({'success': False, 'response': '⚠️ Sessão reiniciada. Por favor, faça upload da planilha novamente.'}), 400
 
         data = request.get_json() or {}
         query = data.get('query')
-        session_id = data.get('session_id') or 'sessao_padrao'
+        session_id = data.get('session_id') or 'default'
         
         if not query: return jsonify({'success': False, 'response': 'Pergunta vazia.'}), 400
 
-        # Configura e Chama IA
-        model = obter_modelo_gemini()
+        # CONFIGURAÇÃO SEGURA DO MODELO
+        model = obter_modelo_seguro()
         
+        # Histórico
         if session_id not in historicos: historicos[session_id] = []
+        
         prompt = gerar_prompt_analista(query, dados_globais['df'], historicos[session_id])
         
         response = model.generate_content(prompt)
-        resposta_final = response.text
+        texto_resp = response.text
         
-        # Salva histórico
         historicos[session_id].append({'role': 'user', 'content': query})
-        historicos[session_id].append({'role': 'model', 'content': resposta_final})
+        historicos[session_id].append({'role': 'model', 'content': texto_resp})
         
-        return jsonify({'success': True, 'response': resposta_final, 'session_id': session_id})
+        return jsonify({'success': True, 'response': texto_resp, 'session_id': session_id})
 
     except Exception as e:
-        # Loga o erro no console da Vercel mas retorna JSON limpo
-        print(traceback.format_exc()) 
+        # Retorna erro detalhado no chat para debug se necessário
+        print(traceback.format_exc())
         return jsonify({
             'success': False, 
-            'response': f"❌ **Erro Técnico:** {str(e)}\n\nVerifique se a API Key é válida e se o arquivo requirements.txt contém 'google-generativeai>=0.7.0' e 'tabulate'."
+            'response': f"❌ **Erro Técnico:** {str(e)}\n\n(Tentei selecionar um modelo seguro, mas houve falha na API ou na formatação)."
         }), 500
 
 @app.route('/api/status', methods=['GET'])
 def status():
-    tem_dados = dados_globais['df'] is not None
-    return jsonify({
-        'status': 'online',
-        'dados': tem_dados,
-        'arquivo': dados_globais.get('nome_arquivo')
-    })
+    return jsonify({'status': 'online', 'dados': dados_globais['df'] is not None})
 
 @app.route('/api/limpar', methods=['POST'])
 def limpar():
     dados_globais['df'] = None
     return jsonify({'success': True})
 
-# Rotas Frontend
 @app.route('/')
 def index():
     return send_from_directory(STATIC_DIR, 'index.html')
