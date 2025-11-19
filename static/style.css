@@ -79,7 +79,7 @@ body {
 }
 
 .logo h1 {
-    font-size: 1.74m;
+    font-size: 1.75;
     font-weight: 700;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
@@ -93,7 +93,6 @@ body {
     margin-left: 44px;
 }
 
-/* ===== CONTAINER PRINCIPAL ===== */
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -104,7 +103,6 @@ body {
     height: calc(100vh - 120px);
 }
 
-/* ===== SIDEBAR ===== */
 .sidebar {
     display: flex;
     flex-direction: column;
