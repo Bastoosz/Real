@@ -6,7 +6,7 @@
     --bg-tertiary: #262b3a;
     
     /* Acentos */
-    --accent-primary: #00aaff;
+    --accent-primary: #06a9fa;
     --accent-hover: #0088cc;
     --accent-gradient: linear-gradient(135deg, #00aaff 0%, #0066ff 100%);
     
@@ -79,7 +79,7 @@ body {
 }
 
 .logo h1 {
-    font-size: 1.75rem;
+    font-size: 1.74m;
     font-weight: 700;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
